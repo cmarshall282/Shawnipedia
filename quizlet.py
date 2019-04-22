@@ -74,3 +74,20 @@ class Quizlet():
             else:
                 i += 1
                 continue
+    def define(self, term: str):
+        """
+        Usage [Quizlet instance].define(term)
+
+        Returns the definition of the given term
+        NOTE: Term must be ALL LOWERCASE
+        """
+        output = ''
+        if self.term_dict == {}:
+            self.get_dict()
+        try:
+            output = self.term_dict[term]
+        except:
+            print('The term "{}" was not found in any of the given study sets'.format(term))
+            return None
+        else:
+            return output
