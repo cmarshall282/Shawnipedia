@@ -42,3 +42,19 @@ class Quizlet():
             else:
                 i += 1
                 continue
+    def get_terms(self):
+        """
+        Usage: [Quizlet instance].get_terms()
+
+        Saves a list of terms collected from all given urls to study sets
+        """
+        if self.cards == []: # Initialize cards if not done already
+            self.get_cards()
+        i = 0
+        for card in self.cards:
+            if i % 2 == 0:
+                self.terms.append(card) # Adding terms only (terms are at all even-numbered indexes)
+                i += 1
+            else:
+                i += 1
+                continue
