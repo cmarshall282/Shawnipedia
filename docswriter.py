@@ -65,3 +65,18 @@ class DocsWriter():
         This function updates the file that is being worked with.
         '''
         result = self.service.documents().batchUpdate(documentId=self.DOCUMENT_ID, body={'requests': self.requests}).execute()
+
+    def get_terms(self):
+        '''
+        This function returns the terms in the left hand column of a table.
+        '''
+
+        terms = []
+        document = self.service.documents().get(documentId=self.DOCUMENT_ID).execute()
+
+        for row in document.get('body').get('content')[2].get('table').get('tableRows'):
+            term = row.get('tableCells')[0].get('content')[0].get('paragraph').get('elements')[0].get('textRun').get('content')
+            term = term.strip()
+            terms.append(term)
+
+        return terms
