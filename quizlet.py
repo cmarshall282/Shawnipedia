@@ -14,13 +14,16 @@ class Quizlet():
 
         Initializes the list of cards to contain all terms AND definitions, used for
         the dictionary, the list of terms, and the list of definitions
+
+        NOTE: All terms and definitions are LOWERCASE
         """
         for url in self.urls:
             req = requests.get(url)
             soup = BeautifulSoup(req.text, 'html.parser')
-            cards = soup.find_all('span', class_='TermText notranslate lang-en')
+            cards = soup.find_all('span', class_='TermText notranslate lang-en') # Find all classes containing either terms or definitions
             for card in cards:
                 item = str(card)[43::][:-7] # Slicing to remove html text
+                item = item.lower() # Making everything lowercase for consistency
                 self.cards.append(item)
     def get_dict(self):
         """
@@ -29,7 +32,7 @@ class Quizlet():
         Initializes the dictionary in which the terms are stored as keys,
         and the definitions are stored as values in the dictionary
         """
-        if self.cards == []:
+        if self.cards == []: # Initialize cards if not done already
             self.get_cards()
         i = 0
         for card in self.cards:
