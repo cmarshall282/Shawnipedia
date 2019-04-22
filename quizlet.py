@@ -58,3 +58,19 @@ class Quizlet():
             else:
                 i += 1
                 continue
+    def get_definitions(self):
+        """
+        Usage: [Quizlet instance].get_definitions()
+
+        Saves a list of definitions collected from all given urls to study sets
+        """
+        if self.cards == []:
+            self.get_cards()
+        i = 0
+        for card in self.cards:
+            if i % 2 == 1:
+                self.definitions.append(card) # Adding definitions only (terms are at all odd-numbered indexes)
+                i += 1
+            else:
+                i += 1
+                continue
