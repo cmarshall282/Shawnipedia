@@ -45,7 +45,7 @@ class DocsWriter():
         case_sensitive - Either 'true' or 'false'. old_text will be checked as case sensitive or not.
         '''
 
-        if case_sensitive != 'true' or case_sensitive != 'false':
+        if case_sensitive != 'true' and case_sensitive != 'false':
             return
 
         self.requests.append(
@@ -77,6 +77,7 @@ class DocsWriter():
         for row in document.get('body').get('content')[2].get('table').get('tableRows'):
             term = row.get('tableCells')[0].get('content')[0].get('paragraph').get('elements')[0].get('textRun').get('content')
             term = term.strip()
+            term = term.lower()
             terms.append(term)
 
         return terms

@@ -88,6 +88,6 @@ class Quizlet():
             output = self.term_dict[term]
         except:
             print('The term "{}" was not found in any of the given study sets'.format(term))
-            return None
+            return ''
         else:
             return output
