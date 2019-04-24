@@ -197,7 +197,3 @@ def sort(terms, definitions):
                 moved = True
 
     return[terms, definitions]
-
-if __name__ == '__main__':
-    docs = DocsWriter('1v-28ZBgabi1FeoMmr4trTp0Rh8DtomORz514ZD2Ahrc')
-    docs.alphabetize(definitions_completed=False)

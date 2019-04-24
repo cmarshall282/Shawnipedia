@@ -13,5 +13,13 @@ def main():
 
     docswriter.update_file()
 
+def alphabetize():
+    #Enter doc id's below
+    documents = []
+
+    for doc in documents:
+        docswriter = DocsWriter(doc)
+        docswriter.alphabetize(definitions_completed=False)
+
 if __name__ == '__main__':
-    main()
+    alphabetize()
