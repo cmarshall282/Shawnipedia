@@ -112,32 +112,36 @@ class DocsWriter():
         This function alphabetizes the first table in the document.
         '''
 
-        unsorted_terms = self.get_terms(lowercase=False)
-        unsorted_definitions = self.get_definitions()
+        unsorted_terms_list = self.get_terms_multi(lowercase=False)
+        unsorted_definitions_list = self.get_definitions_multi()
 
-        sorted_values = sort(unsorted_terms.copy(), unsorted_definitions.copy())
-        sorted_terms = sorted_values[0]
-        sorted_definitions = sorted_values[1]
+        for j in range(len(unsorted_definitions_list)):
+            unsorted_terms = unsorted_terms_list[j]
+            unsorted_definitions = unsorted_definitions_list[j]
 
-        for i in range(len(unsorted_definitions)):
-            self.replace_text(unsorted_definitions[i], '^' + str(i))
+            sorted_values = sort(unsorted_terms.copy(), unsorted_definitions.copy())
+            sorted_terms = sorted_values[0]
+            sorted_definitions = sorted_values[1]
 
-        self.update_file()
+            for i in range(len(unsorted_definitions)):
+                self.replace_text(unsorted_definitions[i], '^' + str(i))
 
-        for i in range(len(unsorted_terms)):
-            self.replace_text(unsorted_terms[i], '*' + str(i))
+            self.update_file()
 
-        self.update_file()
+            for i in range(len(unsorted_terms)):
+                self.replace_text(unsorted_terms[i], '*' + str(i))
 
-        for i in range(len(sorted_terms) - 1, -1, -1):
-            self.replace_text('*' + str(i), sorted_terms[i])
+            self.update_file()
 
-        self.update_file()
+            for i in range(len(sorted_terms) - 1, -1, -1):
+                self.replace_text('*' + str(i), sorted_terms[i])
 
-        for i in range(len(sorted_definitions) - 1, -1, -1):
-            self.replace_text('^' + str(i), sorted_definitions[i])
+            self.update_file()
 
-        self.update_file()
+            for i in range(len(sorted_definitions) - 1, -1, -1):
+                self.replace_text('^' + str(i), sorted_definitions[i])
+
+            self.update_file()
     def is_table(self, content: dict):
         try:
             content.get('table').get('tableRows')
@@ -153,7 +157,10 @@ class DocsWriter():
             else:
                 continue
         return output
-    def get_terms_multi(self, tables: list):
+    def get_terms_multi(self):
+        document = self.service.documents().get(documentId=self.DOCUMENT_ID).execute()
+        tables = self.get_tables(document.get('body').get('content'))
+
         output = []
         for table in tables:
             entry = []
@@ -161,7 +168,10 @@ class DocsWriter():
                 entry.append(item.get('tableCells')[0].get('content')[0].get('paragraph').get('elements')[0].get('textRun').get('content'))
             output.append(entry)
         return output
-    def get_definitions_multi(self, tables: list):
+    def get_definitions_multi(self):
+        document = self.service.documents().get(documentId=self.DOCUMENT_ID).execute()
+        tables = self.get_tables(document.get('body').get('content'))
+
         output = []
         for table in tables:
             entry = []
@@ -185,7 +195,5 @@ def sort(terms, definitions):
     return[terms, definitions]
 
 if __name__ == '__main__':
-    docs = DocsWriter('1z15FjM6SE65Do6r_d9rR8m8l7ttwqtispNMAAHqhGgU')
-    document = docs.service.documents().get(documentId=docs.DOCUMENT_ID).execute()
-    tables = docs.get_tables(document.get('body').get('content'))
-    print(docs.get_table_content(tables))
+    docs = DocsWriter('1dRZAWl_b9RqvrvIRM5q5XxtE5NcmeopazRk23qJshzk')
+    docs.alphabetize()
