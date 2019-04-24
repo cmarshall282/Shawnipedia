@@ -145,6 +145,30 @@ class DocsWriter():
             return False
         else:
             return True
+    def get_tables(self, content: list):
+        output = []
+        for item in content:
+            if self.is_table(item):
+                output.append(item.get('table').get('tableRows'))
+            else:
+                continue
+        return output
+    def get_terms_multi(self, tables: list):
+        output = []
+        for table in tables:
+            entry = []
+            for item in table:
+                entry.append(item.get('tableCells')[0].get('content')[0].get('paragraph').get('elements')[0].get('textRun').get('content'))
+            output.append(entry)
+        return output
+    def get_definitions_multi(self, tables: list):
+        output = []
+        for table in tables:
+            entry = []
+            for item in table:
+                entry.append(item.get('tableCells')[1].get('content')[0].get('paragraph').get('elements')[0].get('textRun').get('content'))
+            output.append(entry)
+        return output
 
 def sort(terms, definitions):
     moved = True
@@ -159,3 +183,9 @@ def sort(terms, definitions):
                 moved = True
 
     return[terms, definitions]
+
+if __name__ == '__main__':
+    docs = DocsWriter('1z15FjM6SE65Do6r_d9rR8m8l7ttwqtispNMAAHqhGgU')
+    document = docs.service.documents().get(documentId=docs.DOCUMENT_ID).execute()
+    tables = docs.get_tables(document.get('body').get('content'))
+    print(docs.get_table_content(tables))
