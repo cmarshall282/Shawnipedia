@@ -107,12 +107,12 @@ class DocsWriter():
 
         return definitions            
 
-    def alphabetize(self):
+    def alphabetize(self, definitions_completed):
         '''
         This function alphabetizes the first table in the document.
         '''
 
-        unsorted_terms_list = self.get_terms_multi(lowercase=False)
+        unsorted_terms_list = self.get_terms_multi()
         unsorted_definitions_list = self.get_definitions_multi()
 
         for j in range(len(unsorted_definitions_list)):
@@ -123,10 +123,11 @@ class DocsWriter():
             sorted_terms = sorted_values[0]
             sorted_definitions = sorted_values[1]
 
-            for i in range(len(unsorted_definitions)):
-                self.replace_text(unsorted_definitions[i], '^' + str(i))
+            if definitions_completed:
+                for i in range(len(unsorted_definitions)):
+                    self.replace_text(unsorted_definitions[i], '^' + str(i))
 
-            self.update_file()
+                self.update_file()
 
             for i in range(len(unsorted_terms)):
                 self.replace_text(unsorted_terms[i], '*' + str(i))
@@ -138,10 +139,11 @@ class DocsWriter():
 
             self.update_file()
 
-            for i in range(len(sorted_definitions) - 1, -1, -1):
-                self.replace_text('^' + str(i), sorted_definitions[i])
+            if definitions_completed:
+                for i in range(len(sorted_definitions) - 1, -1, -1):
+                    self.replace_text('^' + str(i), sorted_definitions[i])
 
-            self.update_file()
+                self.update_file()
     def is_table(self, content: dict):
         try:
             content.get('table').get('tableRows')
@@ -165,7 +167,7 @@ class DocsWriter():
         for table in tables:
             entry = []
             for item in table:
-                entry.append(item.get('tableCells')[0].get('content')[0].get('paragraph').get('elements')[0].get('textRun').get('content'))
+                entry.append(item.get('tableCells')[0].get('content')[0].get('paragraph').get('elements')[0].get('textRun').get('content').strip())
             output.append(entry)
         return output
     def get_definitions_multi(self):
@@ -176,7 +178,7 @@ class DocsWriter():
         for table in tables:
             entry = []
             for item in table:
-                entry.append(item.get('tableCells')[1].get('content')[0].get('paragraph').get('elements')[0].get('textRun').get('content'))
+                entry.append(item.get('tableCells')[1].get('content')[0].get('paragraph').get('elements')[0].get('textRun').get('content').strip())
             output.append(entry)
         return output
 
@@ -188,6 +190,8 @@ def sort(terms, definitions):
 
         for i in range(len(terms) - 1):
             if terms[i] > terms[i+1]:
+                terms[i].lower()
+                terms[i + 1].lower()
                 terms[i], terms[i+1] = terms[i+1], terms[i]
                 definitions[i], definitions[i+1] = definitions[i+1], definitions[i]
                 moved = True
@@ -195,5 +199,5 @@ def sort(terms, definitions):
     return[terms, definitions]
 
 if __name__ == '__main__':
-    docs = DocsWriter('1dRZAWl_b9RqvrvIRM5q5XxtE5NcmeopazRk23qJshzk')
-    docs.alphabetize()
+    docs = DocsWriter('1v-28ZBgabi1FeoMmr4trTp0Rh8DtomORz514ZD2Ahrc')
+    docs.alphabetize(definitions_completed=False)
