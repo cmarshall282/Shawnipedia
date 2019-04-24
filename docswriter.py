@@ -1,6 +1,7 @@
 from __future__ import print_function
 import pickle
 import os.path
+import json
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -137,6 +138,13 @@ class DocsWriter():
             self.replace_text('^' + str(i), sorted_definitions[i])
 
         self.update_file()
+    def is_table(self, content: dict):
+        try:
+            content.get('table').get('tableRows')
+        except:
+            return False
+        else:
+            return True
 
 def sort(terms, definitions):
     moved = True
